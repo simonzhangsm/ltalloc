@@ -12,13 +12,6 @@
 namespace lt {
 template <class T>
 struct allocator {
-    typedef size_t size_type;
-    typedef ptrdiff_t difference_type;
-    typedef T* pointer;
-    typedef const T* const_pointer;
-    typedef T& reference;
-    typedef const T& const_reference;
-    typedef T value_type;
 
     template <class U> struct rebind { typedef allocator<U> other; };
     allocator() throw() {}
@@ -28,31 +21,31 @@ struct allocator {
 
     ~allocator() throw() {}
 
-    pointer address(reference x) const { return &x; }
-    const_pointer address(const_reference x) const { return &x; }
+    T* address(T& x) const { return &x; }
+    const T* address(const T& x) const { return &x; }
 
-    pointer allocate(size_type s, void const * = 0) {
+    T* allocate(size_t s, void const * = 0) {
         if (0 == s)
             return NULL;
-        pointer temp = (pointer)ltmalloc(s * sizeof(T));
+        T* temp = (T*)ltmalloc(s * sizeof(T));
         if (temp == NULL)
             throw std::bad_alloc();
         return temp;
     }
 
-    void deallocate(pointer p, size_type) {
+    void deallocate(T* p, size_t) {
         ltfree(p);
     }
 
-    size_type max_size() const throw() {
+    size_t max_size() const throw() {
         return std::numeric_limits<size_t>::max() / sizeof(T);
     }
 
-    void construct(pointer p, const T& val) {
+    void construct(T* p, const T& val) {
         new((void *)p) T(val);
     }
 
-    void destroy(pointer p) {
+    void destroy(T* p) {
         p->~T();
     }
 };

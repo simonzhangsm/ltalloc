@@ -21,7 +21,7 @@ void threadproc(int* error)
 				*error = true;
 				return;
 			}
-			p[t ^ 1] = (char*)ltmalloc(128);
+			p[t ^ 1] = (char*)ltmalloc(1024);
 			ltfree(p[t]);
 			p[t] = NULL;
 		}
@@ -37,7 +37,7 @@ TEST_CASE("Original test code from the wiki", "[ltalloc]")
 	std::cout.flush();
 
 	float maxmops = 0;
-	for (int n = 0; n < 4; ++n)
+	for (int n = 0; n < 16; ++n)
 	{
 		std::vector<int> thread_errors;
 		thread_errors.resize(nb_threads);
